@@ -32,7 +32,6 @@ int main(int argc, const char * argv[]) {
         exit(1);
     }
 
-
     if(type==0) {
         int epochs = 1;
         double lr = RATE;
@@ -84,11 +83,11 @@ int main(int argc, const char * argv[]) {
         
     } else {
         
-        network = new NeuralNetwork(argv[3]);
+        network = new NeuralNetwork(/*"/Users/crescenzogarofalo/Documents/reti/NeuralNetwork/NeuralNetwork/xnor_weights.net"*/argv[3]);
     
-        FILE* testFile = fopen(argv[2], "r");
-        char* line = nullptr;
-        size_t len = 0;
+        FILE* testFile = fopen(/*"/Users/crescenzogarofalo/Documents/reti/NeuralNetwork/NeuralNetwork/xnor_test.csv"*/argv[2], "r");
+        char line[1024];
+        size_t len = 1024;
         
         if(testFile == 0) {
             exit(EXIT_FAILURE);
@@ -97,7 +96,7 @@ int main(int argc, const char * argv[]) {
         std::vector<double>* testRow;
         int dimTestRow=0;
         bool isFirst = true;
-        while((getline(&line, &len, testFile)) != -1) {
+        while(fgets(line, (int)len, testFile) != NULL) {
             testRow = new std::vector<double>();
             char* headToken = strtok(line, ",");
             while(headToken != NULL) {
