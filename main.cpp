@@ -10,6 +10,8 @@
 
 // learning rate
 #define RATE 0.7
+#define MAX_LINE_LENGTH 1024
+
 /*
  Use example:
  ./mnist 0 mnist_train.csv 7 50000 0.2 0.01 9 100
@@ -86,8 +88,7 @@ int main(int argc, const char * argv[]) {
         network = new NeuralNetwork(/*"/Users/crescenzogarofalo/Documents/reti/NeuralNetwork/NeuralNetwork/xnor_weights.net"*/argv[3]);
     
         FILE* testFile = fopen(/*"/Users/crescenzogarofalo/Documents/reti/NeuralNetwork/NeuralNetwork/xnor_test.csv"*/argv[2], "r");
-        char line[1024];
-        size_t len = 1024;
+        char line[MAX_LINE_LENGTH];
         
         if(testFile == 0) {
             exit(EXIT_FAILURE);
@@ -96,7 +97,7 @@ int main(int argc, const char * argv[]) {
         std::vector<double>* testRow;
         int dimTestRow=0;
         bool isFirst = true;
-        while(fgets(line, (int)len, testFile) != NULL) {
+        while(fgets(line, MAX_LINE_LENGTH, testFile) != NULL) {
             testRow = new std::vector<double>();
             char* headToken = strtok(line, ",");
             while(headToken != NULL) {
