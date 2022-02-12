@@ -8,9 +8,6 @@
 #include <iostream>
 #include "NeuralNetwork.hpp"
 
-// learning rate
-#define RATE 0.7
-#define MAX_LINE_LENGTH 1024
 
 /*
  Use example:
@@ -48,7 +45,7 @@ int main(int argc, const char * argv[]) {
             exit(1);
         }
 
-        u_long dimConfigArg = strlen(argv[2]);
+        unsigned long dimConfigArg = strlen(argv[2]);
 
         char* configArgv = (char *) malloc(dimConfigArg+1);
         //char configArgv[dimConfigArg];

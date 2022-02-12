@@ -13,6 +13,10 @@
 #include <iostream>
 #include <vector>
 
+// learning rate
+#define RATE 0.7
+
+#define MAX_LINE_LENGTH 1024
 
 
 using std::cout;

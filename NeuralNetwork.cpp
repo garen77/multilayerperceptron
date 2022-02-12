@@ -46,8 +46,7 @@ NeuralNetwork::NeuralNetwork(const char* weightsFileName) {
     
     FILE* weightsFile = fopen(weightsFileName, "r");
     
-    char* line = nullptr;
-    size_t len = 0;
+    char line[MAX_LINE_LENGTH];
     
     if(weightsFile == 0) {
         exit(EXIT_FAILURE);
@@ -56,7 +55,7 @@ NeuralNetwork::NeuralNetwork(const char* weightsFileName) {
     std::vector<std::vector<std::vector<double>*>*>* layers = new std::vector<std::vector<std::vector<double>*>*>();
     std::vector<std::vector<double>*>* currLayer = nullptr;
     std::vector<double>* currNeuron = nullptr;
-    while((getline(&line, &len, weightsFile)) != -1) {
+    while(fgets(line, MAX_LINE_LENGTH, weightsFile)) {
         if (strncmp(line, LAYER, strlen(LAYER)) == 0) {
             currLayer = nullptr;
             continue;
@@ -275,13 +274,13 @@ void NeuralNetwork::trainNetwork(const char* trainFileName, const char* weightsF
     }
     
     int numSamples = 0;
-    char* line = nullptr;
-    size_t len = 0;
+    char line[MAX_LINE_LENGTH];
+
     int dimSample = -1;
     if (isLogActive) {
         cout<<"\nstart reading file...\n";
     }
-    while((getline(&line, &len, trainFile)) != -1) {
+    while(fgets(line, MAX_LINE_LENGTH, trainFile)) {
         numSamples++;
         if(dimSample == -1) {
             char* headToken = strtok(line, ",");
@@ -301,7 +300,7 @@ void NeuralNetwork::trainNetwork(const char* trainFileName, const char* weightsF
     }
     double** trainingSet = new double*[numSamples];
     numSamples = 0;
-    while((getline(&line, &len, trainFile)) != -1) {
+    while(fgets(line, MAX_LINE_LENGTH, trainFile)) {
         char* token = strtok(line, ",");
         double* trainRow = new double[dimSample+1];
         int i=0;
