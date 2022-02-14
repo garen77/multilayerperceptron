@@ -75,7 +75,7 @@ int main(int argc, const char * argv[]) {
         free(configArgv);
         network = new NeuralNetwork(configuration,confDim-1);
         cout<<"\n-----start training------\n";
-        network->trainNetwork(argv[3], argv[4], lr, epochs, 2);
+        network->trainNetwork(argv[3], argv[4], lr, epochs, configuration[confDim-1]);
         cout<<"\n-----end training------\n";
         delete[] configuration;
         delete network;

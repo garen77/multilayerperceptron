@@ -342,8 +342,8 @@ void NeuralNetwork::trainNetwork(double** trainingSet, const char* weightsFileNa
             for(int k=0; k<numOutputs; k++) {
                 sumError += pow((expected[k] - outputs[k]), 2);
             }
-            this->backPropagate(expected, numOutputs);
-            this->updateWeights(inputs, dimSample, lr);
+            this->backPropagate(expected, numOutputs); // gradient calculation
+            this->updateWeights(inputs, dimSample, lr); // stochastic gradient descent
             delete[] expected;
             delete[] inputs;
         }
