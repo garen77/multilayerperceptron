@@ -327,6 +327,71 @@ void NeuralNetwork::trainNetwork(const char* trainFileName, const char* weightsF
 void NeuralNetwork::trainNetwork(double** trainingSet, const char* weightsFileName, int numSamples, int dimSample, double lr, int numEpochs, int numOutputs) {
     for(int epoch=0; epoch<numEpochs; epoch++) {
         double sumError = 0.0;
+        int numMiniBatches = numSamples/MINI_BATCH_SIZE;
+        
+        for(int b=0; b<numMiniBatches; b++) {
+            int miniBatchStart = b*MINI_BATCH_SIZE;
+            int miniBatchEnd = miniBatchStart + MINI_BATCH_SIZE;
+            double* inputsForUpdate = new double[dimSample];
+            int numLayers = this->numOfLayers;
+            double** mbDeltas = new double*[numLayers];
+            // init deltas structure for mini batch sum
+            for(int i=0; i<numLayers; i++) {
+                Layer* layer = this->layers[i];
+                int layerSize = layer->numOfNeurons;
+                mbDeltas[i] = new double[layerSize];
+                for(int j=0; j<layerSize; j++) {
+                    mbDeltas[i][j] = 0.0;
+                }
+            }
+            for (int i=miniBatchStart; i<miniBatchEnd; i++) {
+                double* row = trainingSet[i];
+                double* inputs = new double[dimSample];
+                for(int j=0; j<dimSample; j++) {
+                    inputs[j] = row[j];
+                }
+                double* outputs = this->frowardPropagate(inputs, dimSample);
+                double* expected = new double[numOutputs];
+                for(int j=0; j<numOutputs; j++) {
+                    expected[j] = 0.0;
+                }
+                expected[(int)row[dimSample]] = 1.0;
+                for(int k=0; k<numOutputs; k++) {
+                    sumError += pow((expected[k] - outputs[k]), 2);
+                }
+                this->backPropagate(expected, numOutputs); // gradient calculation
+                //this->updateWeights(inputs, dimSample, lr); // stochastic gradient descent
+         
+                // update deltas structure for mini batch sum
+                for(int i=0; i<numLayers; i++) {
+                    Layer* layer = this->layers[i];
+                    int layerSize = layer->numOfNeurons;
+                    for(int j=0; j<layerSize; j++) {
+                        mbDeltas[i][j] += layer->neurons[j]->delta;
+                    }
+                }
+                if(i==miniBatchEnd-1) {
+                    for(int j=0; j<dimSample; j++) {
+                        inputsForUpdate[j] = row[j];
+                    }
+                }
+                delete[] expected;
+                delete[] inputs;
+            }
+            for(int i=0; i<numLayers; i++) {
+                Layer* layer = this->layers[i];
+                int layerSize = layer->numOfNeurons;
+                for(int j=0; j<layerSize; j++) {
+                    layer->neurons[j]->delta = mbDeltas[i][j]/MINI_BATCH_SIZE;
+                }
+            }
+            this->updateWeights(inputsForUpdate, dimSample, lr); // mini batch gradient descent
+            for(int i=0; i<numLayers; i++) {
+                delete[] mbDeltas[i];
+            }
+            delete[] mbDeltas;
+        }
+        
         for(int i=0; i<numSamples; i++) {
             double* row = trainingSet[i];
             double* inputs = new double[dimSample];

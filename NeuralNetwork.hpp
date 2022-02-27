@@ -18,6 +18,8 @@
 
 #define MAX_LINE_LENGTH 1024
 
+#define MINI_BATCH_SIZE 2
+
 
 using std::cout;
 
