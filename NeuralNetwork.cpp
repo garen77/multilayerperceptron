@@ -392,7 +392,7 @@ void NeuralNetwork::trainNetwork(double** trainingSet, const char* weightsFileNa
             delete[] mbDeltas;
         }
         
-        for(int i=0; i<numSamples; i++) {
+        /*for(int i=0; i<numSamples; i++) {
             double* row = trainingSet[i];
             double* inputs = new double[dimSample];
             for(int j=0; j<dimSample; j++) {
@@ -411,7 +411,7 @@ void NeuralNetwork::trainNetwork(double** trainingSet, const char* weightsFileNa
             this->updateWeights(inputs, dimSample, lr); // stochastic gradient descent
             delete[] expected;
             delete[] inputs;
-        }
+        }*/
         if (isLogActive) {
             cout << "\nepoch = " << epoch << ", learning rate = " << lr << ", error = " << sumError << "\n";
         }
